@@ -127,7 +127,7 @@ def build_vocabulary(image_paths, vocab_size):
     features = tuple(features)
     features = np.vstack(features)
     centers = MiniBatchKMeans(n_clusters=vocab_size,
-                              max_iter=500).fit(features)
+                              max_iter=1000).fit(features)
     vocab = np.vstack(centers.cluster_centers_)
 
     #############################################################################
@@ -206,7 +206,7 @@ def get_bags_of_sifts(image_paths, vocab_filename):
         for _ in range(len(vocab)):
             feat.append(0)
         frames, descriptors = dsift(
-            image=image, size=4, step=5, float_descriptors=True)
+            image=image, size=4, step=3, float_descriptors=True)
         assignments = vlfeat.kmeans.kmeans_quantize(descriptors, vocab)
         for v_id in assignments:
             feat[v_id] += 1
@@ -259,7 +259,7 @@ def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats,
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
 
-    knn = KNeighborsClassifier(n_neighbors=6)
+    knn = KNeighborsClassifier(n_neighbors=7)
     knn.fit(train_image_feats, train_labels)
     test_labels = knn.predict(test_image_feats)
 
@@ -310,7 +310,7 @@ def svm_classify(train_image_feats, train_labels, test_image_feats):
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
 
-    svm = LinearSVC(random_state=0, tol=1e-3, loss='hinge', C=5)
+    svm = LinearSVC(random_state=0, tol=1e-3, loss='hinge', C=5, max_iter=2000)
     svm.fit(train_image_feats, train_labels)
     test_labels = svm.predict(test_image_feats)
 
@@ -327,7 +327,7 @@ def cross_score(total_image_feats, total_labels):
     scores = cross_val_score(Knn, total_image_feats, total_labels, cv=5)
     print("KNN Cross Accuracy: %0.2f (+/- %0.2f)" %
           (scores.mean(), scores.std() * 2))
-    svm = LinearSVC(random_state=0, tol=1e-3, loss='hinge', C=5)
+    svm = LinearSVC(random_state=0, tol=1e-3, loss='hinge', C=5, max_iter=2000)
     scores = cross_val_score(svm, total_image_feats, total_labels, cv=5)
     print("SVM Cross Accuracy: %0.2f (+/- %0.2f)" %
           (scores.mean(), scores.std() * 2))
