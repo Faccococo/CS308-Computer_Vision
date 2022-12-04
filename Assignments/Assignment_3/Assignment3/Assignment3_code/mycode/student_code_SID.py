@@ -11,6 +11,8 @@ import scipy.spatial.distance as distance
 from cyvlfeat.sift.dsift import dsift
 from cyvlfeat.kmeans import kmeans
 from time import time
+from sklearn.cluster import MiniBatchKMeans
+from sklearn.neighbors import KNeighborsClassifier
 
 
 def get_tiny_images(image_paths):
@@ -120,14 +122,20 @@ def build_vocabulary(image_paths, vocab_size):
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
 
-    images = [cv2.imread(path) for path in image_paths]
-    feature = []
+    images = [load_image_gray(path) for path in image_paths]
+    features = []
 
     for image in images:
+        frames, descriptors = dsift(
+            image=image, size=4, step=5, fast=True, float_descriptors=True)
+        features.append(descriptors)
+    centers = MiniBatchKMeans(n_clusters=vocab_size,
+                              max_iter=500).fit(features[0])
+    vocab = np.vstack(centers.cluster_centers_)
 
-        #############################################################################
-        #                             END OF YOUR CODE                              #
-        #############################################################################
+    #############################################################################
+    #                             END OF YOUR CODE                              #
+    #############################################################################
 
     return vocab
 
@@ -194,13 +202,21 @@ def get_bags_of_sifts(image_paths, vocab_filename):
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
 
-    raise NotImplementedError('`get_bags_of_sifts` function in ' +
-                              '`student_code.py` needs to be implemented')
+    images = [load_image_gray(path) for path in image_paths]
 
-    #############################################################################
-    #                             END OF YOUR CODE                              #
-    #############################################################################
-
+    for image in images:
+        feat = []
+        for _ in range(len(vocab)):
+            feat.append(0)
+        frames, descriptors = dsift(
+            image=image, size=4, step=5, fast=True, float_descriptors=True)
+        assignments = vlfeat.kmeans.kmeans_quantize(descriptors, vocab)
+        for v_id in assignments:
+            feat[v_id] += 1
+            #############################################################################
+            #                             END OF YOUR CODE                              #
+            #############################################################################
+        feats.append(feat)
     return feats
 
 
@@ -245,8 +261,9 @@ def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats,
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
 
-    raise NotImplementedError('`nearest_neighbor_classify` function in ' +
-                              '`student_code.py` needs to be implemented')
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(train_image_feats, train_labels)
+    test_labels = knn.predict(test_image_feats)
 
     #############################################################################
     #                             END OF YOUR CODE                              #
@@ -294,9 +311,9 @@ def svm_classify(train_image_feats, train_labels, test_image_feats):
     #############################################################################
     # TODO: YOUR CODE HERE                                                      #
     #############################################################################
-
-    raise NotImplementedError('`svm_classify` function in ' +
-                              '`student_code.py` needs to be implemented')
+    svm = LinearSVC()
+    svm.fit(train_image_feats, train_labels)
+    test_labels = svm.predict(test_image_feats)
 
     #############################################################################
     #                             END OF YOUR CODE                              #
