@@ -3,14 +3,8 @@ import numpy as np
 import pickle
 from utils import load_image, load_image_gray
 import cyvlfeat as vlfeat
-import sklearn.metrics.pairwise as sklearn_pairwise
 from sklearn.svm import LinearSVC
-from IPython.core.debugger import set_trace
-from PIL import Image
-import scipy.spatial.distance as distance
 from cyvlfeat.sift.dsift import dsift
-from cyvlfeat.kmeans import kmeans
-from time import time
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -325,3 +319,15 @@ def svm_classify(train_image_feats, train_labels, test_image_feats):
     #############################################################################
 
     return test_labels
+
+
+def cross_score(total_image_feats, total_labels):
+    from sklearn.model_selection import cross_val_score
+    Knn = KNeighborsClassifier(n_neighbors=6)
+    scores = cross_val_score(Knn, total_image_feats, total_labels, cv=5)
+    print("KNN Cross Accuracy: %0.2f (+/- %0.2f)" %
+          (scores.mean(), scores.std() * 2))
+    svm = LinearSVC(random_state=0, tol=1e-3, loss='hinge', C=5)
+    scores = cross_val_score(svm, total_image_feats, total_labels, cv=5)
+    print("SVM Cross Accuracy: %0.2f (+/- %0.2f)" %
+          (scores.mean(), scores.std() * 2))
