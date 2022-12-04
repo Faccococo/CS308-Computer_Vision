@@ -213,11 +213,12 @@ def get_bags_of_sifts(image_paths, vocab_filename):
         assignments = vlfeat.kmeans.kmeans_quantize(descriptors, vocab)
         for v_id in assignments:
             feat[v_id] += 1
-            #############################################################################
-            #                             END OF YOUR CODE                              #
-            #############################################################################
         feats.append(feat)
     return feats
+
+    #############################################################################
+    #                             END OF YOUR CODE                              #
+    #############################################################################
 
 
 def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats,
