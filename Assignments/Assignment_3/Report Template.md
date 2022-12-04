@@ -1,14 +1,20 @@
 # Computer Vision Assignment Report
 
-Title:
+Title: Computer Vision Assignment 3 Report
 
-Student Name:
+Student Name: Zitong Huang
 
-Student ID:
+Student ID: 12012710
 
 
 
 ### 1. Experimental Design
+
+In this experimental, scene classify can be divided into 2 steps: feature building and feature classifing.
+
+#### Word Bag Building
+
+In this experimental I have used 2 ways to build features: Tiny Image and Sift
 
 
 

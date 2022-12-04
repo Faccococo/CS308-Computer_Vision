@@ -206,7 +206,7 @@ def get_bags_of_sifts(image_paths, vocab_filename):
         for _ in range(len(vocab)):
             feat.append(0)
         frames, descriptors = dsift(
-            image=image, size=4, step=3, float_descriptors=True)
+            image=image, size=4, step=5, float_descriptors=True)
         assignments = vlfeat.kmeans.kmeans_quantize(descriptors, vocab)
         for v_id in assignments:
             feat[v_id] += 1
