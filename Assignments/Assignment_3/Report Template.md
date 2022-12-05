@@ -28,12 +28,12 @@ In this experimental I have used 2 ways to build features: Tiny Image and Sift
 
 Some result in this experimental is show below:
 
-| vocab_size          | 10   | 20   | 50   | 100  | 200  | 400  | 1000 | 10000 |
-| ------------------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ----- |
-| KNN with Tiny Image |      |      |      |      |      |      |      |       |
-| SVM with Tiny Image |      |      |      |      |      |      |      |       |
-| KNN with WBM        |      |      |      |      |      |      |      |       |
-| SVM with WBM        |      |      |      |      |      |      |      |       |
+| vocab_size          | 10   | 20   | 50   | 100  | 200  | 400            | 1000           | 10000 |
+| ------------------- | ---- | ---- | ---- | ---- | ---- | -------------- | -------------- | ----- |
+| KNN with Tiny Image |      |      |      |      |      | 0.23(+/- 0.02) | 0.23(+/- 0.02) |       |
+| SVM with Tiny Image |      |      |      |      |      | 0.16(+/- 0.04) | 0.15(+/- 0.01) |       |
+| KNN with WBM        |      |      |      |      |      | 0.58(+/- 0.02) | 0.57(+/- 0.02) |       |
+| SVM with WBM        |      |      |      |      |      | 0.66(+/- 0.05) | 0.73(+/- 0.04) |       |
 
 Other hyper-parameters is show below:
 

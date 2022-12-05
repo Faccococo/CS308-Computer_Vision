@@ -323,7 +323,7 @@ def svm_classify(train_image_feats, train_labels, test_image_feats):
 
 def cross_score(total_image_feats, total_labels):
     from sklearn.model_selection import cross_val_score
-    Knn = KNeighborsClassifier(n_neighbors=6)
+    Knn = KNeighborsClassifier(n_neighbors=7)
     scores = cross_val_score(Knn, total_image_feats, total_labels, cv=5)
     print("KNN Cross Accuracy: %0.2f (+/- %0.2f)" %
           (scores.mean(), scores.std() * 2))
