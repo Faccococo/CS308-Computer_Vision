@@ -21,7 +21,7 @@ def get_positive_features(train_path_pos, feature_params):
     -   feature_params: dictionary of HoG feature computation parameters.
         You can include various parameters in it. Two defaults are:
             -   template_size: (default 36) The number of pixels spanned by
-            each train/test template.
+            each train/test D.
             -   hog_cell_size: (default 6) The number of pixels in each HoG
             cell. template size should be evenly divisible by hog_cell_size.
             Smaller HoG cell sizes tend to work better, but they make things
@@ -45,14 +45,19 @@ def get_positive_features(train_path_pos, feature_params):
     ###########################################################################
     #                           TODO: YOUR CODE HERE                          #
     ###########################################################################
-    
+
     n_cell = np.ceil(win_size/cell_size).astype('int')
-    feats = np.random.rand(len(positive_files), n_cell*n_cell*31)
+    feats = []
+    for face_pth in positive_files:
+        face = load_image_gray(face_pth)
+        feature = vlfeat.cyvlfeat.hog.hog(image=face, cell_size=cell_size)
+        print(feature.shape)
+        feats.append(feature)
+    # feats = np.array(feats)
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
-
     return feats
 
 def get_random_negative_features(non_face_scn_path, feature_params, num_samples):
